@@ -11,5 +11,22 @@
 
     <artifactId>ailife8-crawler</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/us.codecraft/webmagic-core -->
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-core</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/us.codecraft/webmagic-extension -->
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-extension</artifactId>
+            <version>0.7.2</version>
+        </dependency>
+    </dependencies>
 </project>
