@@ -1,6 +1,8 @@
 package com.franklions.ailife.crawler.mapper;
 
+import com.franklions.ailife.crawler.domain.ApplyData;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author Administrator
@@ -10,5 +12,16 @@ import org.apache.ibatis.annotations.Mapper;
  * @since Jdk 1.8
  */
 @Mapper
-public class ApplyDataMapper {
+public interface ApplyDataMapper {
+    int deleteByPrimaryKey( @Param("id") Long id);
+
+    int insert(@Param("record") ApplyData record);
+
+    int insertSelective(@Param("record") ApplyData record);
+
+    ApplyData selectByPrimaryKey(@Param("id") Long id);
+
+    int updateByPrimaryKeySelective(@Param("record") ApplyData record);
+
+    int updateByPrimaryKey(@Param("record") ApplyData record);
 }
