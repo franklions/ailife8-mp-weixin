@@ -4,6 +4,8 @@ import com.franklions.ailife.crawler.domain.ApplyData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author Administrator
  * @version 1.0
@@ -24,4 +26,6 @@ public interface ApplyDataMapper {
     int updateByPrimaryKeySelective(@Param("record") ApplyData record);
 
     int updateByPrimaryKey(@Param("record") ApplyData record);
+
+    boolean insertBatch(@Param("dataList") List<ApplyData> dataList);
 }

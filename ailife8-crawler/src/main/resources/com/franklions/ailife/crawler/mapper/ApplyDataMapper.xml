@@ -21,11 +21,19 @@
     delete from ApplyData
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
-    insert into ApplyData (id, issueNumber, applyCode, 
+  <insert id="insert" parameterType="com.franklions.ailife.crawler.domain.ApplyData" keyProperty="id" >
+    insert into ApplyData ( issueNumber, applyCode,
       applyName, ts)
-    values (#{id,jdbcType=BIGINT}, #{issuenumber,jdbcType=INTEGER}, #{applycode,jdbcType=VARCHAR}, 
+    values ( #{issuenumber,jdbcType=INTEGER}, #{applycode,jdbcType=VARCHAR},
       #{applyname,jdbcType=VARCHAR}, #{ts,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List"  >
+    insert into ApplyData (issueNumber, applyCode,
+    applyName, ts)
+    values
+    <foreach collection="dataList" item="item" index="index" separator=",">
+     (#{item.issuenumber}, #{item.applycode},#{item.applyname}, #{item.ts})
+    </foreach>
   </insert>
   <insert id="insertSelective" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
     insert into ApplyData
