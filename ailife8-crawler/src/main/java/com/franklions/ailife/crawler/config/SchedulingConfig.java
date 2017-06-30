@@ -21,7 +21,7 @@ public class SchedulingConfig {
     @Autowired
     Spider spider ;
 
-    @Scheduled(cron = "0 18 17 * * ?") // 每天下午3点半执行
+    @Scheduled(cron = "${cron.expression}") // 每天下午3点半执行
     public void scheduler() {
         logger.info(">>>>>>>>>>>>> scheduled ... " + new Date());
         spider.run();
