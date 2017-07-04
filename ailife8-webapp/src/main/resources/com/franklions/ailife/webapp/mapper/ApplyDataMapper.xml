@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.franklions.ailife.crawler.mapper.ApplyDataMapper" >
+  <resultMap id="BaseResultMap" type="com.franklions.ailife.crawler.domain.ApplyData" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="issueNumber" property="issuenumber" jdbcType="INTEGER" />
+    <result column="applyCode" property="applycode" jdbcType="VARCHAR" />
+    <result column="applyName" property="applyname" jdbcType="VARCHAR" />
+    <result column="ts" property="ts" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, issueNumber, applyCode, applyName, ts
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ApplyData
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ApplyData
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.franklions.ailife.crawler.domain.ApplyData" keyProperty="id" >
+    insert into ApplyData ( issueNumber, applyCode,
+      applyName, ts)
+    values ( #{issuenumber,jdbcType=INTEGER}, #{applycode,jdbcType=VARCHAR},
+      #{applyname,jdbcType=VARCHAR}, #{ts,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List"  >
+    insert into ApplyData (issueNumber, applyCode,
+    applyName, ts)
+    values
+    <foreach collection="dataList" item="item" index="index" separator=",">
+     (#{item.issuenumber}, #{item.applycode},#{item.applyname}, #{item.ts})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+    insert into ApplyData
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="issuenumber != null" >
+        issueNumber,
+      </if>
+      <if test="applycode != null" >
+        applyCode,
+      </if>
+      <if test="applyname != null" >
+        applyName,
+      </if>
+      <if test="ts != null" >
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="issuenumber != null" >
+        #{issuenumber,jdbcType=INTEGER},
+      </if>
+      <if test="applycode != null" >
+        #{applycode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyname != null" >
+        #{applyname,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        #{ts,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+    update ApplyData
+    <set >
+      <if test="issuenumber != null" >
+        issueNumber = #{issuenumber,jdbcType=INTEGER},
+      </if>
+      <if test="applycode != null" >
+        applyCode = #{applycode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyname != null" >
+        applyName = #{applyname,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        ts = #{ts,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+    update ApplyData
+    set issueNumber = #{issuenumber,jdbcType=INTEGER},
+      applyCode = #{applycode,jdbcType=VARCHAR},
+      applyName = #{applyname,jdbcType=VARCHAR},
+      ts = #{ts,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
