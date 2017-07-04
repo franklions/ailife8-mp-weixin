@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.franklions.ailife.crawler.mapper.ApplyDataMapper" >
-  <resultMap id="BaseResultMap" type="com.franklions.ailife.crawler.domain.ApplyData" >
+<mapper namespace="com.franklions.ailife.webapp.mapper.ApplyDataMapper" >
+  <resultMap id="BaseResultMap" type="com.franklions.ailife.webapp.domain.ApplyData" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="issueNumber" property="issuenumber" jdbcType="INTEGER" />
     <result column="applyCode" property="applycode" jdbcType="VARCHAR" />
@@ -11,6 +11,15 @@
   <sql id="Base_Column_List" >
     id, issueNumber, applyCode, applyName, ts
   </sql>
+  <select id="selectByKeys" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ApplyData
+    where (applyName LIKE CONCAT('%',#{keys},'%')
+    or applyCode LIKE CONCAT('%',#{keys},'%') )
+    and issueNumber = (select max(issueNumber) from ApplyData)
+    order by issueNumber desc,applyCode asc
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -21,7 +30,7 @@
     delete from ApplyData
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.franklions.ailife.crawler.domain.ApplyData" keyProperty="id" >
+  <insert id="insert" parameterType="com.franklions.ailife.webapp.domain.ApplyData" keyProperty="id" >
     insert into ApplyData ( issueNumber, applyCode,
       applyName, ts)
     values ( #{issuenumber,jdbcType=INTEGER}, #{applycode,jdbcType=VARCHAR},
@@ -35,7 +44,7 @@
      (#{item.issuenumber}, #{item.applycode},#{item.applyname}, #{item.ts})
     </foreach>
   </insert>
-  <insert id="insertSelective" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+  <insert id="insertSelective" parameterType="com.franklions.ailife.webapp.domain.ApplyData" >
     insert into ApplyData
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -72,7 +81,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.franklions.ailife.webapp.domain.ApplyData" >
     update ApplyData
     <set >
       <if test="issuenumber != null" >
@@ -90,7 +99,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.franklions.ailife.crawler.domain.ApplyData" >
+  <update id="updateByPrimaryKey" parameterType="com.franklions.ailife.webapp.domain.ApplyData" >
     update ApplyData
     set issueNumber = #{issuenumber,jdbcType=INTEGER},
       applyCode = #{applycode,jdbcType=VARCHAR},

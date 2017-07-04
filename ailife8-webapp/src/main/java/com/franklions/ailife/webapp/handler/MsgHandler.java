@@ -2,6 +2,7 @@ package com.franklions.ailife.webapp.handler;
 
 
 import com.franklions.ailife.webapp.builder.TextBuilder;
+import com.franklions.ailife.webapp.domain.ApplyData;
 import com.franklions.ailife.webapp.service.IApplyDataService;
 import com.franklions.ailife.webapp.utils.JsonUtils;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,9 +59,7 @@ public class MsgHandler extends AbstractHandler {
         switch (menuKey)
         {
             case "1":           //中签查询
-                applyDataService.selectApply();
-
-                replyContent="恭喜您，您已经中签，请先交5万元来领取车牌！";
+                replyContent=GetApplyDatas(keys);
                 break;
             case "2":           //绑定申请编号
                 replyContent="即将上线 敬请期待！";
@@ -93,6 +93,30 @@ public class MsgHandler extends AbstractHandler {
         }
         return new TextBuilder().build(replyContent, wxMessage, weixinService);
 
+    }
+
+    private String GetApplyDatas(String keys) {
+        String[] searchUser = keys.split(" ");
+        if(searchUser.length >1)
+        {
+            List<ApplyData> applys =applyDataService.searchApply(searchUser[1] );
+
+            String searchResult = "中签结果：\n";
+            if(applys.size() >0)
+            {
+                for (ApplyData applyData : applys) {
+                    searchResult +=applyData.getApplycode() +"|"+applyData.getApplyname()+"|"+applyData.getIssuenumber() + "\n";
+                }
+            }else
+            {
+                searchResult="抱歉，该申请人本次未中签！\n预祝下次中签！";
+            }
+
+            return searchResult;
+        }else
+        {
+            return "查询参数错误.";
+        }
     }
 
     private WxMpXmlOutMessage createMenuBuilder(WxMpXmlMessage wxMessage,

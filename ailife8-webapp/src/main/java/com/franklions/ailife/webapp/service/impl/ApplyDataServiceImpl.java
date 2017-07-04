@@ -26,4 +26,9 @@ public class ApplyDataServiceImpl implements IApplyDataService {
     public boolean batchSave(List<ApplyData> dataMap) {
         return applyDataMapper.insertBatch(dataMap);
     }
+
+    @Override
+    public List<ApplyData> searchApply(String keys) {
+        return applyDataMapper.selectByKeys(keys);
+    }
 }

@@ -29,4 +29,6 @@ public interface ApplyDataMapper {
     int updateByPrimaryKey(@Param("record") ApplyData record);
 
     boolean insertBatch(@Param("dataList") List<ApplyData> dataList);
+
+    List<ApplyData> selectByKeys(@Param("keys") String keys);
 }

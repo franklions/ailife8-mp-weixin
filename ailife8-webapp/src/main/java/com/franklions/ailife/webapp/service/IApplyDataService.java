@@ -14,4 +14,6 @@ import java.util.List;
  */
 public interface IApplyDataService {
     boolean batchSave(List<ApplyData> dataList);
+
+    List<ApplyData> searchApply(String keys);
 }
