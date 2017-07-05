@@ -91,6 +91,9 @@ public class MsgHandler extends AbstractHandler {
             default:
                 return createMenuBuilder(wxMessage,weixinService);
         }
+
+        logger.info("返回结果：\n"+replyContent);
+
         return new TextBuilder().build(replyContent, wxMessage, weixinService);
 
     }
