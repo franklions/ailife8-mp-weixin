@@ -31,4 +31,9 @@ public class ApplyDataServiceImpl implements IApplyDataService {
     public List<ApplyData> searchApply(String keys) {
         return applyDataMapper.selectByKeys(keys);
     }
+
+    @Override
+    public List<ApplyData> searchApplyByCode(String applycode) {
+        return applyDataMapper.selectByCode(applycode);
+    }
 }

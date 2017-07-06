@@ -16,4 +16,6 @@ public interface IApplyDataService {
     boolean batchSave(List<ApplyData> dataList);
 
     List<ApplyData> searchApply(String keys);
+
+    List<ApplyData> searchApplyByCode(String applycode);
 }

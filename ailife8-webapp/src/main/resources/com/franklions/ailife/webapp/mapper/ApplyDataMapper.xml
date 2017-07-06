@@ -20,6 +20,13 @@
     and issueNumber = (select max(issueNumber) from ApplyData)
     order by issueNumber desc,applyCode asc
   </select>
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ApplyData
+    where  applyCode =#{code}
+    order by issueNumber desc,applyCode asc
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

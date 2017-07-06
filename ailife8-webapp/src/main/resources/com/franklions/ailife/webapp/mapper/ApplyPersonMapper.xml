@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.franklions.ailife.webapp.mapper.ApplyPersonMapper" >
+  <resultMap id="BaseResultMap" type="com.franklions.ailife.webapp.domain.ApplyPerson" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pName" property="pname" jdbcType="VARCHAR" />
+    <result column="wxUser" property="wxuser" jdbcType="VARCHAR" />
+    <result column="applyCode" property="applycode" jdbcType="VARCHAR" />
+    <result column="phoneNum" property="phonenum" jdbcType="VARCHAR" />
+    <result column="ts" property="ts" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pName, wxUser, applyCode, phoneNum, ts
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ApplyPerson
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectBywxUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from ApplyPerson
+    where wxUser = #{wxUser,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ApplyPerson
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.franklions.ailife.webapp.domain.ApplyPerson" useGeneratedKeys="true" keyProperty="id">
+    insert into ApplyPerson ( pName, wxUser,
+      applyCode, phoneNum, ts
+      )
+    values (#{pname,jdbcType=VARCHAR}, #{wxuser,jdbcType=VARCHAR},
+      #{applycode,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{ts,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.franklions.ailife.webapp.domain.ApplyPerson" >
+    insert into ApplyPerson
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pname != null" >
+        pName,
+      </if>
+      <if test="wxuser != null" >
+        wxUser,
+      </if>
+      <if test="applycode != null" >
+        applyCode,
+      </if>
+      <if test="phonenum != null" >
+        phoneNum,
+      </if>
+      <if test="ts != null" >
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pname != null" >
+        #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="wxuser != null" >
+        #{wxuser,jdbcType=VARCHAR},
+      </if>
+      <if test="applycode != null" >
+        #{applycode,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null" >
+        #{phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        #{ts,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.franklions.ailife.webapp.domain.ApplyPerson" >
+    update ApplyPerson
+    <set >
+      <if test="pname != null" >
+        pName = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="wxuser != null" >
+        wxUser = #{wxuser,jdbcType=VARCHAR},
+      </if>
+      <if test="applycode != null" >
+        applyCode = #{applycode,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null" >
+        phoneNum = #{phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        ts = #{ts,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.franklions.ailife.webapp.domain.ApplyPerson" >
+    update ApplyPerson
+    set pName = #{pname,jdbcType=VARCHAR},
+      wxUser = #{wxuser,jdbcType=VARCHAR},
+      applyCode = #{applycode,jdbcType=VARCHAR},
+      phoneNum = #{phonenum,jdbcType=VARCHAR},
+      ts = #{ts,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

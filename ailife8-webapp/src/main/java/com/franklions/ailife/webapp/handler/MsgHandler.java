@@ -3,7 +3,9 @@ package com.franklions.ailife.webapp.handler;
 
 import com.franklions.ailife.webapp.builder.TextBuilder;
 import com.franklions.ailife.webapp.domain.ApplyData;
+import com.franklions.ailife.webapp.domain.ApplyPerson;
 import com.franklions.ailife.webapp.service.IApplyDataService;
+import com.franklions.ailife.webapp.service.IApplyPersonService;
 import com.franklions.ailife.webapp.utils.JsonUtils;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -28,6 +30,9 @@ public class MsgHandler extends AbstractHandler {
 
     @Autowired
     IApplyDataService applyDataService;
+
+    @Autowired
+    IApplyPersonService applyPersonService;
 
     @Override
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
@@ -54,15 +59,21 @@ public class MsgHandler extends AbstractHandler {
         //TODO 组装回复消息
 //        String content = "收到信息内容：" + JsonUtils.toJson(wxMessage);
         String replyContent= "即将上线 敬请期待！";
-        String keys = wxMessage.getContent();
-        String menuKey=keys.substring(0, 1);
+        String[] keys = wxMessage.getContent().split(" ");
+        String menuKey;
+        if(keys.length < 1){
+            menuKey = "null";
+        }else{
+            menuKey = keys[0].toLowerCase();
+        }
+
         switch (menuKey)
         {
             case "1":           //中签查询
-                replyContent=GetApplyDatas(keys);
+                replyContent=GetApplyDatas(wxMessage.getContent());
                 break;
             case "2":           //绑定申请编号
-                replyContent="即将上线 敬请期待！";
+                replyContent=bindApplyPersion(wxMessage);
                 break;
             case "3":           //活动一下
                 Item item = new Item();
@@ -88,6 +99,9 @@ public class MsgHandler extends AbstractHandler {
             case "6":           //关于我们
                 replyContent="即将上线 敬请期待！";
                 break;
+            case "cx":          //绑定中签查询
+                replyContent=GetApplyDataByWxUser(wxMessage);
+                break;
             default:
                 return createMenuBuilder(wxMessage,weixinService);
         }
@@ -98,6 +112,82 @@ public class MsgHandler extends AbstractHandler {
 
     }
 
+    private String GetApplyDataByWxUser(WxMpXmlMessage wxMessage) {
+        //查询用户是否已经存在
+        ApplyPerson applyPerson = applyPersonService.getPersonBywxUser(wxMessage.getFromUser());
+
+        if(applyPerson == null) {
+            return "您尚未绑定，请先绑定！";
+        }
+
+        List<ApplyData> queryData = applyDataService.searchApplyByCode(applyPerson.getApplycode());
+
+        String searchResult = "中签结果：\n";
+        if(queryData == null || queryData.size() <1)
+        {
+            searchResult="抱歉，该申请人本次未中签！\n预祝下次中签！";
+        }else
+        {
+            for (ApplyData applyData : queryData) {
+                searchResult =applyData.getApplycode() +"|"+applyData.getApplyname()+"|"+applyData.getIssuenumber() + "\n";
+            }
+
+        }
+
+        return searchResult;
+    }
+
+    /**
+     * 绑定申请用户
+     * @param wxMessage
+     * @return
+     */
+    private String bindApplyPersion(WxMpXmlMessage wxMessage) {
+        String personContent = wxMessage.getContent();  //2 0028101124981 18622436962
+        String wxUser = wxMessage.getFromUser();
+        String[] personInfos = personContent.split(" ");
+
+        if(personInfos.length <3) {
+            return "参数错误!";
+        }
+
+        //验证applycode
+
+        //验证 手机号
+
+        //查询用户是否已经存在
+        ApplyPerson wxPerson = applyPersonService.getPersonBywxUser(wxUser);
+
+        if(wxPerson == null) {
+
+            ApplyPerson applyPerson = new ApplyPerson();
+            applyPerson.setApplycode(personInfos[1]);
+            applyPerson.setPhonenum(personInfos[2]);
+            applyPerson.setWxuser(wxUser);
+            applyPerson.setTs(System.currentTimeMillis());
+
+
+            if (!applyPersonService.savePerson(applyPerson)) {
+                return "服务器错误，请重试!";
+            }
+        }else{
+            wxPerson.setApplycode(personInfos[1]);
+            wxPerson.setPhonenum(personInfos[2]);
+            wxPerson.setTs(System.currentTimeMillis());
+
+            if (!applyPersonService.updatePerson(wxPerson)) {
+                return "服务器错误，请重试!";
+            }
+        }
+
+        return "恭喜绑定成功,查询中签只需要输入'cx'.";
+    }
+
+    /**
+     * 查询中签结果
+     * @param keys
+     * @return
+     */
     private String GetApplyDatas(String keys) {
         String[] searchUser = keys.split(" ");
         if(searchUser.length >1)
@@ -122,6 +212,12 @@ public class MsgHandler extends AbstractHandler {
         }
     }
 
+    /**
+     * 创建自动回复菜单
+     * @param wxMessage
+     * @param service
+     * @return
+     */
     private WxMpXmlOutMessage createMenuBuilder(WxMpXmlMessage wxMessage,
                                                 WxMpService service) {
         Item item1 = new Item();

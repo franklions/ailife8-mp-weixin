@@ -31,4 +31,6 @@ public interface ApplyDataMapper {
     boolean insertBatch(@Param("dataList") List<ApplyData> dataList);
 
     List<ApplyData> selectByKeys(@Param("keys") String keys);
+
+    List<ApplyData> selectByCode(@Param("code") String applycode);
 }
